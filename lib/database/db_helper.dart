@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:notes/screen/login.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Database_Helper {
@@ -72,14 +75,23 @@ class Database_Helper {
     );
     if (response.isNotEmpty) {
       user_id = response.first['id'] as int?;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt("user_id", user_id!);
       return response.first;
     } else {
       return null;
     }
   }
 
-  Future<int> getUserId() async {
-    return await user_id!;
+  Future<Object> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getInt("user_id") == null) {
+      return Navigator.push(
+        context as BuildContext,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
+    return prefs.getInt("user_id")!;
   }
 
   Future<List<Map<String, dynamic>>> getNotes() async {

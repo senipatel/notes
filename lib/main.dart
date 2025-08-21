@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: isLoggedIn ? HomePage() : Login(),
+      // home: Login(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

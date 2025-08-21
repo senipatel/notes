@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:notes/screen/login.dart';
 
 import '../database/db_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,6 +31,23 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("NOTES"), centerTitle: true),
+      drawer: Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 50.0, left: 50.0),
+          child: ListTile(
+            onTap: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.setBool("isLoggedIn", false);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
+              );
+            },
+            title: Text("Log Out "),
+          ),
+        ),
+      ),
       body: ListView.builder(
         itemCount: notesData.length,
         itemBuilder: (context, index) {
@@ -85,12 +104,17 @@ class _HomePageState extends State<HomePage> {
             return AlertDialog(
               title: Center(child: Text("add", textAlign: TextAlign.center)),
               content: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(controller: title, decoration: InputDecoration()),
+                  TextField(
+                    controller: title,
+                    decoration: InputDecoration(hintText: "Title"),
+                  ),
                   TextField(
                     controller: description,
-                    decoration: InputDecoration(),
+                    decoration: InputDecoration(hintText: "Description"),
                   ),
+                  SizedBox(height: 10),
                   OutlinedButton(
                     onPressed: () async {
                       final user_id =
@@ -127,9 +151,12 @@ class _HomePageState extends State<HomePage> {
     return AlertDialog(
       title: Center(child: Text("update Note")),
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           TextField(controller: title, decoration: InputDecoration()),
+          SizedBox(height: 10),
           TextField(controller: description, decoration: InputDecoration()),
+          SizedBox(height: 10),
         ],
       ),
       actions: [
