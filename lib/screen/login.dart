@@ -20,93 +20,100 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Container(
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Padding(
             padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text("LOGIN"),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: username,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "username",
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("LOGIN"),
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: username,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "username",
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: password,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "password",
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: password,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "password",
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  OutlinedButton(
-                    onPressed: () async {
-                      final usernameValue = username.text;
-                      final passwordValue = password.text;
-                      final response = await Database_Helper.instance
-                          .chackLogin(usernameValue, passwordValue);
-                      if (response != null) {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.setBool("isLoggedIn", true);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (builder) {
-                            return AlertDialog(
-                              title: Text("failed"),
-                              content: Text(
-                                "invalid input",
-                                style: TextStyle(color: Colors.green),
+                    SizedBox(height: 10),
+                    OutlinedButton(
+                      onPressed: () async {
+                        final usernameValue = username.text;
+                        final passwordValue = password.text;
+                        final response = await Database_Helper.instance
+                            .chackLogin(usernameValue, passwordValue);
+                        if (response != null) {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setBool("isLoggedIn", true);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (builder) {
+                              return AlertDialog(
+                                title: Text("failed"),
+                                content: Text(
+                                  "invalid input",
+                                  style: TextStyle(color: Colors.green),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                      child: Text(
+                        "Login",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text("Don't have an account?"),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Register(),
                               ),
                             );
                           },
-                        );
-                      }
-                    },
-                    child: Text("Login", style: TextStyle(color: Colors.black)),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text("Don't have an account?"),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Register()),
-                          );
-                        },
-                        child: Text(
-                          "Register",
-                          style: TextStyle(
-                            color: Colors.purple,
-                            decoration: TextDecoration.underline,
+                          child: Text(
+                            "Register",
+                            style: TextStyle(
+                              color: Colors.purple,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
